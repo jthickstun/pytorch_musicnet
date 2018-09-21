@@ -137,7 +137,7 @@ class MusicNet(data.Dataset):
 
         jitter = 0.
         if self.jitter > 0:
-            jitter_amount = np.random.uniform(-self.jitter,self.jitter)
+            jitter = np.random.uniform(-self.jitter,self.jitter)
 
         rec_id = self.rec_ids[np.random.randint(0,len(self.rec_ids))]
         s = np.random.randint(0,self.records[rec_id][1]-(2.**((shift+jitter)/12.))*self.window)
