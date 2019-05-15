@@ -178,7 +178,7 @@ class MusicNet(data.Dataset):
                 f.write(data.read())
         if not all(map(lambda f: os.path.exists(os.path.join(self.root, f)), self.extracted_folders)):
             print('Extracting ' + filename)
-            if call(["tar", "-xvvf", file_path]) != 0:
+            if call(["tar", "-xf", file_path, '-C', self.root, '--strip', '1']) != 0:
                 raise OSError("Failed tarball extraction")
 
         # process and save as torch files
