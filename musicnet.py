@@ -175,7 +175,13 @@ class MusicNet(data.Dataset):
             print('Downloading ' + self.url)
             data = urllib.request.urlopen(self.url)
             with open(file_path, 'wb') as f:
-                f.write(data.read())
+                # stream the download to disk (it might not fit in memory!)
+                while True:
+                    chunk = data.read(16*1024)
+                    if not chunk:
+                        break
+                    f.write(chunk)
+
         if not all(map(lambda f: os.path.exists(os.path.join(self.root, f)), self.extracted_folders)):
             print('Extracting ' + filename)
             if call(["tar", "-xf", file_path, '-C', self.root, '--strip', '1']) != 0:
