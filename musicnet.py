@@ -62,10 +62,10 @@ class MusicNet(data.Dataset):
             self.data_path = os.path.join(self.root, self.test_data)
             labels_path = os.path.join(self.root, self.test_labels, self.test_tree)
 
-        with open(labels_path) as f:
+        with open(labels_path, 'rb') as f:
             self.labels = pickle.load(f)
 
-        self.rec_ids = self.labels.keys()
+        self.rec_ids = list(self.labels.keys())
         self.records = dict()
         self.open_files = []
 
@@ -219,7 +219,7 @@ class MusicNet(data.Dataset):
             if not item.endswith('.csv'): continue
             uid = int(item[:-4])
             tree = IntervalTree()
-            with open(os.path.join(self.root,path,item), 'rb') as f:
+            with open(os.path.join(self.root,path,item), 'r') as f:
                 reader = csv.DictReader(f, delimiter=',')
                 for label in reader:
                     start_time = int(label['start_time'])
