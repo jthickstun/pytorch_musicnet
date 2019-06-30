@@ -37,7 +37,8 @@ class MusicNet(data.Dataset):
     test_data, test_labels, test_tree = 'test_data', 'test_labels', 'test_tree.pckl'
     extracted_folders = [train_data,train_labels,test_data,test_labels]
 
-    def __init__(self, root, train=True, download=False, mmap=True, normalize=True, window=16384, pitch_shift=0, jitter=0., epoch_size=100000):
+    def __init__(self, root, train=True, download=False, refresh_cache=False, mmap=True, normalize=True, window=16384, pitch_shift=0, jitter=0., epoch_size=100000):
+        self.refresh_cache = refresh_cache
         self.mmap = mmap
         self.normalize = normalize
         self.window = window
@@ -52,6 +53,7 @@ class MusicNet(data.Dataset):
             self.download()
 
         if not self._check_exists():
+
             raise RuntimeError('Dataset not found.' +
                                ' You can use download=True to download it')
 
@@ -150,7 +152,8 @@ class MusicNet(data.Dataset):
         return os.path.exists(os.path.join(self.root, self.train_data)) and \
             os.path.exists(os.path.join(self.root, self.test_data)) and \
             os.path.exists(os.path.join(self.root, self.train_labels, self.train_tree)) and \
-            os.path.exists(os.path.join(self.root, self.test_labels, self.test_tree))
+            os.path.exists(os.path.join(self.root, self.test_labels, self.test_tree)) and \
+            not self.refresh_cache
 
     def download(self):
         """Download the MusicNet data if it doesn't exist in ``raw_folder`` already."""
@@ -202,6 +205,7 @@ class MusicNet(data.Dataset):
         with open(os.path.join(self.root, self.train_labels, self.train_tree), 'wb') as f:
             pickle.dump(trees, f)
 
+        self.refresh_cache = False
         print('Download Complete')
 
     # write out wavfiles as arrays for direct mmap access
