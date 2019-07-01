@@ -73,15 +73,15 @@ class MusicNet(data.Dataset):
 
     def __enter__(self):
         for record in os.listdir(self.data_path):
-            if not record.endswith('.npy'): continue
+            if not record.endswith('.bin'): continue
             if self.mmap:
                 fd = os.open(os.path.join(self.data_path, record), os.O_RDONLY)
                 buff = mmap.mmap(fd, 0, mmap.MAP_SHARED, mmap.PROT_READ)
-                self.records[int(record[:-4])] = (buff, len(buff)/sz_float)
+                self.records[int(record[:-4])] = (buff, len(buff)//sz_float)
                 self.open_files.append(fd)
             else:
                 f = open(os.path.join(self.data_path, record))
-                self.records[int(record[:-4])] = (os.path.join(self.data_path, record),os.fstat(f.fileno()).st_size/sz_float)
+                self.records[int(record[:-4])] = (os.path.join(self.data_path, record),os.fstat(f.fileno()).st_size//sz_float)
                 f.close()
 
     def __exit__(self, *args):
@@ -214,7 +214,7 @@ class MusicNet(data.Dataset):
             if not item.endswith('.wav'): continue
             uid = int(item[:-4])
             _, data = wavfile.read(os.path.join(self.root,path,item))
-            np.save(os.path.join(self.root,path,item[:-4]),data)
+            data.tofile(os.path.join(self.root,path,item[:-4]+'.bin'))
 
     # wite out labels in intervaltrees for fast access
     def process_labels(self, path):
