@@ -31,7 +31,7 @@ class MusicNet(data.Dataset):
         jitter (int, optional): Continuous pitch-jitter transformations.
         epoch_size (int, optional): Designated Number of samples for an "epoch"
     """
-    url = 'https://homes.cs.washington.edu/~thickstn/media/musicnet.tar.gz'
+    url = 'https://zenodo.org/records/5120004/files/musicnet.tar.gz'
     raw_folder = 'raw'
     train_data, train_labels, train_tree = 'train_data', 'train_labels', 'train_tree.pckl'
     test_data, test_labels, test_tree = 'test_data', 'test_labels', 'test_tree.pckl'
